@@ -95,9 +95,6 @@
           success: function (x) {
             // Get data from json
             var pages = x.query.pages;
-            var titles = [];
-            var urls = [];
-            var extracts = [];
 
             var articles = document.getElementById('articles');
 
@@ -106,9 +103,7 @@
             }
 
             jQuery.each(pages, function(i, val){
-              // titles.push(val.title);
-              // urls.push(val.fullurl);
-              // extracts.push(val.extract)
+
 
               //Create new element
               var article = document.createElement("DIV");
@@ -129,7 +124,6 @@
               }, false);
               articles.appendChild(article);
             });
-            //console.log(pages);
           }
           , cache: false});
 
@@ -137,8 +131,6 @@
 
       }
       document.getElementsByTagName('button')[0].addEventListener('click', searchWiki, false);
-
-
 
     </script>
   </body>
