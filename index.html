@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Wiki Viewer</title>
+    <style media="screen">
+      @media screen and (max-width: 480px){
+        .wiki-form{
+          float: none;
+          margin: 0 auto;
+          margin-bottom: 16px;
+          margin-top: 16px;
+          padding: 10px;
+          width: 80%;
+        }
+        button{
+          margin: 10px;
+          margin-bottom: 5px;
+        }
+        a{
+          margin-bottom: 10px;
+          display: block;
+        }
+        h1{
+          font-size: 180%;
+        }
+        h2{
+          font-size: 125%;
+        }
+        #articles .jumbotron{
+          margin: 0 auto;
+          margin-top: 8px;
+          padding: 8px;
+        }
+        .jumbotron .article-par{
+          font-size: 80%;
+        }
+      }
+      @media screen and (min-width: 480px){
+        .wiki-form{
+          float: none;
+          margin: 0 auto;
+          margin-bottom: 50px;
+          margin-top: 30px;
+          width: 70%;
+        }
+        button{
+          margin: 20px;
+        }
+        a{
+          margin-bottom: 20px;
+          display: block;
+        }
+        #articles .jumbotron{
+          margin: 0 auto;
+          margin-top: 20px;
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container text-center">
+      <form class="wiki-form jumbotron">
+        <h1>Search Wikipedia</h1>
+        <a href="https://en.wikipedia.org/wiki/Special:Random" target="_blank">Get random article</a>
+        <input type="text" name="wiki-search" id="wiki-search" value=""><br>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <div id="articles">
+
+      </div>
+    </div>
+
+    <script
+			  src="https://code.jquery.com/jquery-3.1.1.js"
+			  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+			  crossorigin="anonymous"></script>
+    <script>
+      var searchText = '';
+      function searchWiki(e){
+        e.preventDefault();
+
+        searchText = document.getElementById('wiki-search').value;
+
+        if(searchText != null && searchText != ''){
+        $.ajax({
+          url: 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&prop=info|extracts&inprop=url&gsrsearch=' + searchText,
+          success: function (x) {
+            // Get data from json
+            var pages = x.query.pages;
+            var titles = [];
+            var urls = [];
+            var extracts = [];
+
+            var articles = document.getElementById('articles');
+
+            while(articles.firstChild){
+              articles.removeChild(articles.firstChild);
+            }
+
+            jQuery.each(pages, function(i, val){
+              // titles.push(val.title);
+              // urls.push(val.fullurl);
+              // extracts.push(val.extract)
+
+              //Create new element
+              var article = document.createElement("DIV");
+              article.setAttribute('class','article');
+              article.setAttribute('class','jumbotron');
+              // Set title
+              var articleHead = document.createElement("H2");
+              articleHead.setAttribute('class','article-head');
+              articleHead.innerHTML = val.title;
+              // Set extract
+              var articlePar = document.createElement("P");
+              articlePar.setAttribute('class','article-par');
+              articlePar.innerHTML = val.extract;
+              article.appendChild(articleHead);
+              article.appendChild(articlePar);
+              article.addEventListener('click', function(){
+                window.open(val.fullurl);
+              }, false);
+              articles.appendChild(article);
+            });
+            //console.log(pages);
+          }
+          , cache: false});
+
+        }
+
+      }
+      document.getElementsByTagName('button')[0].addEventListener('click', searchWiki, false);
+
+
+
+    </script>
+  </body>
+</html>
