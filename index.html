@@ -90,9 +90,7 @@
         searchText = document.getElementById('wiki-search').value;
 
         if(searchText != null && searchText != ''){
-        $.ajax({
-          url: 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&prop=info|extracts&inprop=url&gsrsearch=' + searchText,
-          success: function (x) {
+        $.getJSON('https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&prop=info|extracts&inprop=url&gsrsearch=' + searchText + '&callback=?', function (x) {
             // Get data from json
             var pages = x.query.pages;
 
@@ -124,8 +122,7 @@
               }, false);
               articles.appendChild(article);
             });
-          }
-          , cache: false});
+          });
 
         }
 
